@@ -1,8 +1,10 @@
 add sound
+add animation
 add particles
 add adaptive resolution
 assertions
 TODO's
+chore
 comments
 
 credits

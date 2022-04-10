@@ -534,7 +534,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Total: 5
   yDestroyValue: -2
-  yCreateValue: 8
+  MovingPlatformChance: 0.3
 --- !u!114 &1830972799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,8 +547,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba61473deb3d88246bc7681140d67ba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlatformPrefabs:
-  - {fileID: 256154986493113833, guid: 68a75f7cf58337a4aa0901d3e25e8929, type: 3}
+  StaticPlatformPrefab: {fileID: 256154986493113833, guid: 68a75f7cf58337a4aa0901d3e25e8929, type: 3}
+  MovingPlatformPrefab: {fileID: 7835117837338158755, guid: 2b2d26e51eed2e648ae3a60dd5b2e624, type: 3}
 --- !u!4 &1830972800
 Transform:
   m_ObjectHideFlags: 0

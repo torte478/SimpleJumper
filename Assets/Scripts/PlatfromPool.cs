@@ -5,43 +5,53 @@ using UnityEngine.Pool;
 
 public class PlatfromPool : MonoBehaviour
 {
-    private ObjectPool<GameObject>[] pools;
+    private ObjectPool<GameObject> staticPlatformPool;
+    private ObjectPool<GameObject> movingPlatformPool;
 
-    public GameObject[] PlatformPrefabs;
+    public GameObject StaticPlatformPrefab;
+    public GameObject MovingPlatformPrefab;
 
     void Awake()
     {
-        pools = new ObjectPool<GameObject>[1];
-        var index = (int)PlatfromType.Static;
-        pools[index] = new ObjectPool<GameObject>(
-            () => Instantiate(PlatformPrefabs[index]),
+        staticPlatformPool = CreateObjectPool(StaticPlatformPrefab);
+        movingPlatformPool = CreateObjectPool(MovingPlatformPrefab);
+    }
+
+    public BasePlatform Create(Vector3 position, PlatfromType type)
+    {
+        var pool = GetObjectPool(type);
+
+        var platform = pool.Get();
+        platform.transform.position = position;
+        return platform.GetComponent<BasePlatform>();
+    }
+
+    public void Remove(BasePlatform platform)
+    {
+        var platformType = platform.GetComponent<BasePlatform>().PlatfromType;
+        var pool = GetObjectPool(platformType);
+        pool.Release(platform.gameObject);
+    }
+
+    private ObjectPool<GameObject> GetObjectPool(PlatfromType type)
+    {
+        return type switch
+        {
+            PlatfromType.Static => staticPlatformPool,
+            PlatfromType.Moving => movingPlatformPool,
+            _ => throw new System.Exception("TODO")
+        };
+    }
+
+    private static ObjectPool<GameObject> CreateObjectPool(GameObject prefab)
+    {
+        return new ObjectPool<GameObject>(
+            () => Instantiate(prefab),
             (obj) => obj.SetActive(true),
             (obj) => obj.SetActive(false),
             (obj) => Destroy(obj),
             false,
             10,
             20);
-    }
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
-    public GameObject Create(Vector3 position, PlatfromType type)
-    {
-        var platform = pools[(int)type].Get();
-        platform.transform.position = position;
-        return platform;
-    }
-
-    public void Remove(GameObject platform)
-    {
-        pools[0].Release(platform); // TODO
     }
 }
