@@ -97,9 +97,8 @@ public class Player : MonoBehaviour
     {
         if (Input.touchCount > 0)
         {
-            Debug.Log("TOUCH");
             var touch = Input.GetTouch(0);
-            return touch.position.x > 0
+            return touch.position.x > 0 // TODO : fix
                 ? 1.0f
                 : -1.0f;
         }
