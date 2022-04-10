@@ -535,6 +535,7 @@ MonoBehaviour:
   Total: 5
   yDestroyValue: -2
   MovingPlatformChance: 0.3
+  TrapPlatformChance: 0.1
 --- !u!114 &1830972799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -549,6 +550,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StaticPlatformPrefab: {fileID: 256154986493113833, guid: 68a75f7cf58337a4aa0901d3e25e8929, type: 3}
   MovingPlatformPrefab: {fileID: 7835117837338158755, guid: 2b2d26e51eed2e648ae3a60dd5b2e624, type: 3}
+  TrapPlatformPrefab: {fileID: 2240963776621693137, guid: 9c1c5eb357cdd2d4eab5367c342d77dc, type: 3}
 --- !u!4 &1830972800
 Transform:
   m_ObjectHideFlags: 0

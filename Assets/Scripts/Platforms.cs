@@ -13,6 +13,7 @@ public class Platforms : MonoBehaviour
     public float yDestroyValue;
 
     public float MovingPlatformChance = 0.3f;
+    public float TrapPlatformChance = 0.1f;
 
     void Start()
     {
@@ -57,13 +58,11 @@ public class Platforms : MonoBehaviour
 
     private void CreateRandomPlatform()
     {
-        var type = lastCreated.PlatfromType == PlatfromType.Static
-            ? (PlatfromType)(Random.Range(0, 2))
-            : PlatfromType.Static;
-
         var position = new Vector3(
-                Random.Range(-2.5f, 2.5f), 
-                lastCreated.transform.position.y + 2.5f);
+            Random.Range(-2.5f, 2.5f), 
+            lastCreated.transform.position.y + lastCreated.NextPlatformOffset);
+
+        var type = GetRandomPlatformType();
 
         var movement = Random.Range(0, 2) == 0
             ? Vector3.right
@@ -95,9 +94,13 @@ public class Platforms : MonoBehaviour
 
         var chance = Random.Range(0.0f, 1.0f);
 
-        if (chance < MovingPlatformChance)
+        if (chance <= MovingPlatformChance)
             return PlatfromType.Moving;
-        else
-            return PlatfromType.Static;
+
+        chance -= MovingPlatformChance;
+        if (chance < TrapPlatformChance)
+            return PlatfromType.Trap;
+
+        return PlatfromType.Static;
     }
 }

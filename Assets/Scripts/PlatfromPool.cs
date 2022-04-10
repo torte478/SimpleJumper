@@ -7,14 +7,17 @@ public class PlatfromPool : MonoBehaviour
 {
     private ObjectPool<GameObject> staticPlatformPool;
     private ObjectPool<GameObject> movingPlatformPool;
+    private ObjectPool<GameObject> trapPlatformPool;
 
     public GameObject StaticPlatformPrefab;
     public GameObject MovingPlatformPrefab;
+    public GameObject TrapPlatformPrefab;
 
     void Awake()
     {
         staticPlatformPool = CreateObjectPool(StaticPlatformPrefab);
         movingPlatformPool = CreateObjectPool(MovingPlatformPrefab);
+        trapPlatformPool = CreateObjectPool(TrapPlatformPrefab);
     }
 
     public BasePlatform Create(Vector3 position, PlatfromType type)
@@ -39,6 +42,7 @@ public class PlatfromPool : MonoBehaviour
         {
             PlatfromType.Static => staticPlatformPool,
             PlatfromType.Moving => movingPlatformPool,
+            PlatfromType.Trap => trapPlatformPool,
             _ => throw new System.Exception("TODO")
         };
     }

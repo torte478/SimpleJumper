@@ -8,6 +8,8 @@ public class BasePlatform : MonoBehaviour
 
     public virtual float YMaxPosition => transform.position.y;
 
+    public virtual float NextPlatformOffset => 2.5f;
+
     public virtual void ReInit()
     {
     }
@@ -15,5 +17,10 @@ public class BasePlatform : MonoBehaviour
     public virtual void Move(float yDistance)
     {
         transform.position = transform.position.ShiftY(yDistance);
+    }
+
+    public virtual bool CheckCollision()
+    {
+        return true;
     }
 }

@@ -64,12 +64,19 @@ public class Player : MonoBehaviour
         var left = new Vector3(transform.position.x - raycastBounds.x, yCurrent);
         var right = new Vector3(transform.position.x + raycastBounds.x, yCurrent);
 
-        if ((Physics2D.Raycast(left, Vector3.down, raycastBounds.y) 
-            || Physics2D.Raycast(right, Vector3.down, raycastBounds.y)) 
-            && yCurrent < yPrevious)
+        var hit = Physics2D.Raycast(left, Vector3.down, raycastBounds.y);
+        if (!hit)
+            hit = Physics2D.Raycast(right, Vector3.down, raycastBounds.y);
+
+        if (hit && yCurrent < yPrevious && hit.collider.gameObject.TryGetComponent<BasePlatform>(out var platform))
         {
-            body.velocity = new Vector2(body.velocity.x, 0);
-            body.AddForce(new Vector2(0, JumpForceY));
+            var canJump = platform.CheckCollision();
+            
+            if (canJump)
+            {
+                body.velocity = new Vector2(body.velocity.x, 0);
+                body.AddForce(new Vector2(0, JumpForceY));
+            }
         }
 
         yPrevious = yCurrent;
