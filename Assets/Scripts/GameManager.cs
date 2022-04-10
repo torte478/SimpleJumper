@@ -9,6 +9,11 @@ public class GameManager : MonoBehaviour
 
     public GameObject platformPrefab;
     public Transform view;
+    public Transform player;
+
+    public float Border;
+    public float yDestroyValue;
+    public float yCreateValue;
 
     void Start()
     {
@@ -28,8 +33,8 @@ public class GameManager : MonoBehaviour
 
         for (var i = 0; i < PlatformCount; ++i)
         {
-            var x = 0; // Random.Range(-2.5f, 2.5f);
-            var y = -2.0f + i * 2.5f;
+            var x = i == 0 ? 0 : Random.Range(-2.5f, 2.5f);
+            var y = 0.0f + i * 2.5f;
 
             var platform = pool.Get();
             platform.transform.position = new Vector3(x, y);
@@ -40,14 +45,21 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var yDestroyValue = view.position.y - (screenHalfHeight + 1.0f);
-        var yCreateValue = view.position.y + (screenHalfHeight + 1.0f);
-
-        foreach (var platform in platforms)
+        if (player.position.y > Border)
         {
-            if (platform.transform.position.y < yDestroyValue)
+            var diff = player.position.y - Border;
+            
+            player.position = new Vector3(player.position.x, Border);
+            foreach (var platform in platforms)
             {
-                platform.transform.position = new Vector3(platform.transform.position.x, yCreateValue);
+                var pos = platform.transform.position;
+                pos.y -= diff;
+                platform.transform.position = pos;
+
+                if (platform.transform.position.y < yDestroyValue)
+                {
+                    platform.transform.position = new Vector3(platform.transform.position.x, yCreateValue);
+                }
             }
         }
     }
