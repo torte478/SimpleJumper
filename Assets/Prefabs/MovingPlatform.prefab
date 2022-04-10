@@ -144,6 +144,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99fe729ccc3742745b38900a1f3e6a29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxOffset: {x: 2.5, y: 1}
+  MaxOffset: {x: 2, y: 1}
   Speed: 2
   StartMovementDirection: {x: 0, y: 1, z: 0}

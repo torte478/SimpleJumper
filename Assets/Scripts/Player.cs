@@ -32,7 +32,8 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        var xMove = Input.GetAxis("Horizontal");
+        var xMove = GetXMove();
+
         if (xMove != 0)
         {
             var xSpeed = Mathf.Abs(xMove * body.velocity.x);
@@ -89,6 +90,22 @@ public class Player : MonoBehaviour
         else if (transform.position.x > viewSize.x)
         {
             transform.position = new Vector3(-viewSize.x, transform.position.y);
+        }
+    }
+
+    private float GetXMove()
+    {
+        if (Input.touchCount > 0)
+        {
+            Debug.Log("TOUCH");
+            var touch = Input.GetTouch(0);
+            return touch.position.x > 0
+                ? 1.0f
+                : -1.0f;
+        }
+        else 
+        {
+            return Input.GetAxis("Horizontal");
         }
     }
 }

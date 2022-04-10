@@ -11,6 +11,7 @@ public class Platforms : MonoBehaviour
 
     public int Total;
     public float yDestroyValue;
+    public float xRange;
 
     public float MovingPlatformChance = 0.3f;
     public float TrapPlatformChance = 0.1f;
@@ -59,7 +60,7 @@ public class Platforms : MonoBehaviour
     private void CreateRandomPlatform()
     {
         var position = new Vector3(
-            Random.Range(-2.5f, 2.5f), 
+            Random.Range(-xRange, xRange), 
             lastCreated.transform.position.y + lastCreated.NextPlatformOffset);
 
         var type = GetRandomPlatformType();
