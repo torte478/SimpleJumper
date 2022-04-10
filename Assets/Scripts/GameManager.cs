@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
             if (Input.GetTouch(i).phase == TouchPhase.Began)
                 --TapToHideTutorial;
 
-        if (TapToHideTutorial < 0)
+        if (TapToHideTutorial <= 0)
             TutorialText.gameObject.SetActive(false);
     }
 
