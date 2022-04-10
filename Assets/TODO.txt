@@ -1,7 +1,11 @@
+GUI
+androidable
+touch control
 add sound
 add animation
 add particles
 add adaptive resolution
+unify platforms and prefabs
 assertions
 TODO's
 chore
