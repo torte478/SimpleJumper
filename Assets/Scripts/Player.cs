@@ -14,10 +14,10 @@ public class Player : MonoBehaviour
     public float JumpForceY;
     public float MaxSpeed = 3.0f;
     public float Speed = 50.0f;
-
     public AudioClip JumpSound;
     public AudioClip GameOverSound;
-
+    public bool IsPlayerControl;
+    public float TopY;
     
     void Start()
     {
@@ -30,6 +30,16 @@ public class Player : MonoBehaviour
             collider.bounds.extents.y + 0.1f);
 
         viewSize = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+
+        var scaleFactor = GameObject
+            .FindGameObjectWithTag("GameController")
+            .GetComponent<ScreenScaler>().ScaleFactor;
+
+        Speed *= scaleFactor.x;
+        MaxSpeed *= scaleFactor.x;
+        JumpForceY *= scaleFactor.y;
+        TopY *= scaleFactor.y;
+        transform.position = new Vector3(transform.position.x * scaleFactor.x, transform.position.y * scaleFactor.y);
     }
 
     void Update()
@@ -75,7 +85,7 @@ public class Player : MonoBehaviour
         if (!hit)
             hit = Physics2D.Raycast(right, Vector3.down, raycastBounds.y);
 
-        if (hit && yCurrent < yPrevious && hit.collider.gameObject.TryGetComponent<BasePlatform>(out var platform))
+        if (hit && yPrevious > yCurrent && yCurrent < TopY && hit.collider.gameObject.TryGetComponent<BasePlatform>(out var platform))
         {
             var canJump = platform.CheckCollision();
             
@@ -83,12 +93,13 @@ public class Player : MonoBehaviour
             {
                 body.velocity = new Vector2(body.velocity.x, 0);
                 body.AddForce(new Vector2(0, JumpForceY));
-                audioSource.PlayOneShot(JumpSound);
+
+                if (IsPlayerControl)
+                    audioSource.PlayOneShot(JumpSound);
             }
         }
 
         yPrevious = yCurrent;
-
 
         if (transform.position.x < -viewSize.x)
         {
@@ -107,10 +118,14 @@ public class Player : MonoBehaviour
 
     private float GetXMove()
     {
+        if (!IsPlayerControl)
+            return 0.0f;
+
         if (Input.touchCount > 0)
         {
             var touch = Input.GetTouch(0);
-            return touch.position.x > 0 // TODO : fix
+            var worldPosition = Camera.main.ScreenToWorldPoint(touch.position);
+            return worldPosition.x > 0
                 ? 1.0f
                 : -1.0f;
         }

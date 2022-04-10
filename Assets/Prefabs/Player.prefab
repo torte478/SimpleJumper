@@ -126,7 +126,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5, y: 2}
+    oldSize: {x: 1.5, y: 2.0039062}
     newSize: {x: 1.5, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -152,6 +152,8 @@ MonoBehaviour:
   Speed: 50
   JumpSound: {fileID: 8300000, guid: 4d4b1812a48172d488e3b0fd9ff860a9, type: 3}
   GameOverSound: {fileID: 8300000, guid: 63bfbb078cbb6e749b27334d51148cce, type: 3}
+  IsPlayerControl: 1
+  TopY: 5
 --- !u!82 &5278372208786124704
 AudioSource:
   m_ObjectHideFlags: 0

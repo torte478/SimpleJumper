@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BasePlatform : MonoBehaviour
@@ -8,7 +6,7 @@ public class BasePlatform : MonoBehaviour
 
     public virtual float YMaxPosition => transform.position.y;
 
-    public virtual float NextPlatformOffset => 2.5f;
+    public virtual float NextPlatformOffset => 3f;
 
     public virtual void ReInit()
     {

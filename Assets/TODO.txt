@@ -1,8 +1,5 @@
-add particles
-add adaptive resolution
-unify platforms and prefabs (?)
+add adaptive resolution +-
 tutorial
-optimize
 assertions
 TODO's
 chore

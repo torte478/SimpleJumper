@@ -13,6 +13,18 @@ public class MovingPlatform : BasePlatform
     public override PlatfromType PlatfromType => PlatfromType.Moving;
     public override float YMaxPosition => originPosition.y + MaxOffset.y;
 
+    void Start()
+    {
+        var scaleFactor = GameObject
+            .FindGameObjectWithTag("GameController")
+            .GetComponent<ScreenScaler>().ScaleFactor;
+
+        MaxOffset = new Vector3(
+            MaxOffset.x * scaleFactor.x, 
+            MaxOffset.y * scaleFactor.y);
+        Speed *= MaxOffset.x;
+    }
+
     void Update()
     {
         var shift = movementDirection * Speed * Time.deltaTime;

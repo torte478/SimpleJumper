@@ -9,8 +9,6 @@ public class GameManager : MonoBehaviour
     public Platforms Platforms;
     public Transform PlayerObj;
 
-    public float Border;
-
     void Start()
     {
         player = PlayerObj.GetComponent<Player>();
@@ -21,17 +19,17 @@ public class GameManager : MonoBehaviour
         if (gameOver)
             return;
 
-        if (player.transform.position.y < Platforms.yDestroyValue)
+        if (player.transform.position.y < Platforms.YDestroyValue)
         {
             gameOver = true;
             player.GameOver();
             GetComponent<Events>().GameOver();
         }
 
-        var diff = Border - PlayerObj.position.y;
+        var diff = player.TopY - PlayerObj.position.y;
         if (diff < 0)
         {
-            player.transform.position = player.transform.position.SetY(Border);
+            player.transform.position = player.transform.position.SetY(player.TopY);
             Platforms.MovePlatforms(diff);
         }
     }
