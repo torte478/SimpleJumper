@@ -6,8 +6,11 @@ public class GameManager : MonoBehaviour
 
     private bool gameOver = false;
 
+    public int TouchToHideTutorial;
+
     public Platforms Platforms;
     public Transform PlayerObj;
+    public TMPro.TextMeshProUGUI TutorialText;
 
     void Start()
     {
@@ -31,6 +34,16 @@ public class GameManager : MonoBehaviour
         {
             player.transform.position = player.transform.position.SetY(player.TopY);
             Platforms.MovePlatforms(diff);
+        }
+
+        if (TouchToHideTutorial > 0 && Input.touchCount > 0)
+        {
+            for (var i = 0; i < Input.touchCount; ++i)
+                if (Input.GetTouch(i).phase == TouchPhase.Began)
+                    --TouchToHideTutorial;
+
+            if (TouchToHideTutorial < 0)
+                TutorialText.gameObject.SetActive(false);
         }
     }
 }

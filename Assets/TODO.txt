@@ -1,4 +1,3 @@
-add adaptive resolution +-
 tutorial
 assertions
 TODO's
