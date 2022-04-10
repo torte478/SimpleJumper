@@ -1,11 +1,12 @@
-GUI
+MainMenu
 androidable
 touch control
 add sound
 add animation
 add particles
 add adaptive resolution
-unify platforms and prefabs
+unify platforms and prefabs (?)
+tutorial
 assertions
 TODO's
 chore

@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class Events : MonoBehaviour
+public class PauseMenu : MonoBehaviour
 {
     public Button PauseButton;
     public Canvas MenuCanvas;
@@ -12,7 +10,7 @@ public class Events : MonoBehaviour
     public void RestartLevel()
     {
         Time.timeScale = 1.0f;
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("GameScene");
     }
 
     public void Pause()
@@ -27,5 +25,10 @@ public class Events : MonoBehaviour
         Time.timeScale = 1.0f;
         PauseButton.gameObject.SetActive(true);
         MenuCanvas.gameObject.SetActive(false);
+    }
+
+    public void ToMainMenu()
+    {
+        SceneManager.LoadScene("MenuScene");
     }
 }
