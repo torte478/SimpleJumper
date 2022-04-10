@@ -1,12 +1,10 @@
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class GameManager : MonoBehaviour
 {
-    private bool gameOver = false;
-
     private Player player;
+
+    private bool gameOver = false;
 
     public Platforms Platforms;
     public Transform PlayerObj;
@@ -26,6 +24,7 @@ public class GameManager : MonoBehaviour
         if (player.transform.position.y < Platforms.yDestroyValue)
         {
             gameOver = true;
+            player.GameOver();
             GetComponent<Events>().GameOver();
         }
 

@@ -1,5 +1,3 @@
-add sound
-add animation
 add particles
 add adaptive resolution
 unify platforms and prefabs (?)

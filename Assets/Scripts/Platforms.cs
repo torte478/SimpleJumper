@@ -93,6 +93,8 @@ public class Platforms : MonoBehaviour
         if (lastCreated.PlatfromType != PlatfromType.Static)
             return PlatfromType.Static;
 
+        return PlatfromType.Trap;
+
         var chance = Random.Range(0.0f, 1.0f);
 
         if (chance <= MovingPlatformChance)

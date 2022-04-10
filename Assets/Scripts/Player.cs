@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     private Rigidbody2D body;
     private Vector2 raycastBounds;
+    private AudioSource audioSource;
 
     private float yPrevious;
     private Vector2 viewSize;
@@ -14,9 +15,14 @@ public class Player : MonoBehaviour
     public float MaxSpeed = 3.0f;
     public float Speed = 50.0f;
 
+    public AudioClip JumpSound;
+    public AudioClip GameOverSound;
+
+    
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
 
         var collider = GetComponent<BoxCollider2D>();
         raycastBounds = new Vector2(
@@ -77,6 +83,7 @@ public class Player : MonoBehaviour
             {
                 body.velocity = new Vector2(body.velocity.x, 0);
                 body.AddForce(new Vector2(0, JumpForceY));
+                audioSource.PlayOneShot(JumpSound);
             }
         }
 
@@ -91,6 +98,11 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(-viewSize.x, transform.position.y);
         }
+    }
+
+    public void GameOver()
+    {
+        audioSource.PlayOneShot(GameOverSound);
     }
 
     private float GetXMove()
