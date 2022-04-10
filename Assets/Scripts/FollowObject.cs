@@ -7,6 +7,8 @@ public class FollowObject : MonoBehaviour
 
     void Update()
     {   
-        transform.position = target.transform.position + offset;
+        var position = transform.position;
+        position.y = target.position.y;
+        transform.position = position;
     }
 }

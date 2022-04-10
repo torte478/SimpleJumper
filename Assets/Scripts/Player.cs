@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     private Vector2 raycastBounds;
 
     private float yPrevious;
+    private Vector2 viewSize;
 
     public float JumpForceY;
     public float MaxSpeed = 3.0f;
@@ -21,6 +22,8 @@ public class Player : MonoBehaviour
         raycastBounds = new Vector2(
             collider.bounds.extents.x,
             collider.bounds.extents.y + 0.1f);
+
+        viewSize = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
     }
 
     void Update()
@@ -70,5 +73,15 @@ public class Player : MonoBehaviour
         }
 
         yPrevious = yCurrent;
+
+
+        if (transform.position.x < -viewSize.x)
+        {
+            transform.position = new Vector3(viewSize.x, transform.position.y);
+        }
+        else if (transform.position.x > viewSize.x)
+        {
+            transform.position = new Vector3(-viewSize.x, transform.position.y);
+        }
     }
 }
