@@ -1,7 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Класс-контроллер платформ.
+/// </summary>
 public class Platforms : MonoBehaviour
 {
     private PlatfromPool pool;
@@ -10,16 +12,34 @@ public class Platforms : MonoBehaviour
 
     private BasePlatform lastCreated;
 
+    /// <summary>
+    /// Общее количество одновременно существующих платформ.
+    /// </summary>
     public int Total;
+
+    /// <summary>
+    /// Координата уничтожения платформ.
+    /// </summary>
     public float YDestroyValue;
+
+    /// <summary>
+    /// Диапазон, в котором создаются новые платформы.
+    /// </summary>
     public float XRange;
 
+    /// <summary>
+    /// Шанс создания движущейся платформы.
+    /// </summary>
     public float MovingPlatformChance = 0.3f;
+
+    /// <summary>
+    /// Шанс создания платформы-ловушки.
+    /// </summary>
     public float TrapPlatformChance = 0.1f;
 
     void Start()
     {
-        pool = GetComponent<PlatfromPool>();   
+        pool = GetComponent<PlatfromPool>();
 
         scaleFactor = GameObject
             .FindGameObjectWithTag("GameController")
@@ -28,40 +48,22 @@ public class Platforms : MonoBehaviour
         YDestroyValue *= scaleFactor.y;
         XRange *= scaleFactor.x;
 
-        platformList = new LinkedList<BasePlatform>();
-        for (var i = 0; i < Total; ++i)
-        {
-            if (i == 0)
-                CreatePlatform(new Vector3(2f * scaleFactor.x, 0.0f), PlatfromType.Static, Vector3.zero);
-            else if (i == 1)
-                CreatePlatform(new Vector3(-2f * scaleFactor.x, 2.5f * scaleFactor.y), PlatfromType.Static, Vector3.zero);
-            else
-                CreateRandomPlatform();
-        }
+        CreateStartPlatforms();
     }
 
+    /// <summary>
+    /// Перемещает все активные платформы по оси Y.
+    /// </summary>
+    /// <param name="yDistance">Расстояние перемещения.</param>
     public void MovePlatforms(float yDistance)
     {
-        var currentNode = platformList.First;
-        
-        while (currentNode != null)
-        {
-            var platform = currentNode.Value;
-            platform.Move(yDistance);
-
-            if (platform.YMaxPosition < YDestroyValue)
+        platformList.RemoveWhere(
+            (p) =>
             {
-                var toRemove = currentNode;
-                currentNode = currentNode.Next;
-                platformList.Remove(toRemove);
-
-                pool.Remove(platform);
-            }
-            else
-            {
-                currentNode = currentNode.Next;
-            }
-        }
+                p.Move(yDistance);
+                return p.YMaxPosition < YDestroyValue;
+            },
+            (p) => pool.Remove(p));
 
         while (platformList.Count < Total)
             CreateRandomPlatform();
@@ -69,9 +71,8 @@ public class Platforms : MonoBehaviour
 
     private void CreateRandomPlatform()
     {
-        var position = new Vector3(
-            Random.Range(-XRange, XRange), 
-            (lastCreated.transform.position.y + lastCreated.NextPlatformOffset) * scaleFactor.y);
+        var x = Random.Range(-XRange, XRange);
+        var y = (lastCreated.transform.position.y + lastCreated.NextPlatformOffset) * scaleFactor.y;
 
         var type = GetRandomPlatformType();
 
@@ -79,12 +80,13 @@ public class Platforms : MonoBehaviour
             ? Vector3.right
             : Vector3.up;
 
-        var newPlatform = CreatePlatform(position, type, movement);
+        var newPlatform = CreatePlatform(new Vector3(x, y), type, movement);
     }
 
     private BasePlatform CreatePlatform(Vector3 position, PlatfromType type, Vector3 movement)
     {
         var newPlatform = pool.Create(position, type);
+
         if (type == PlatfromType.Moving)
         {
             (newPlatform as MovingPlatform).StartMovementDirection = movement;
@@ -109,9 +111,24 @@ public class Platforms : MonoBehaviour
             return PlatfromType.Moving;
 
         chance -= MovingPlatformChance;
-        if (chance < TrapPlatformChance)
+        if (chance <= TrapPlatformChance)
             return PlatfromType.Trap;
 
         return PlatfromType.Static;
+    }
+
+    private void CreateStartPlatforms()
+    {
+        platformList = new LinkedList<BasePlatform>();
+
+        for (var i = 0; i < Total; ++i)
+        {
+            if (i == 0)
+                CreatePlatform(new Vector3(2f * scaleFactor.x, 0.0f), PlatfromType.Static, Vector3.zero);
+            else if (i == 1)
+                CreatePlatform(new Vector3(-2f * scaleFactor.x, 2.5f * scaleFactor.y), PlatfromType.Static, Vector3.zero);
+            else
+                CreateRandomPlatform();
+        }
     }
 }

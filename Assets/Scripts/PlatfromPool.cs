@@ -1,16 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Pool;
 
+/// <summary>
+/// Класс для управления пулами платформ.
+/// </summary>
 public class PlatfromPool : MonoBehaviour
 {
     private ObjectPool<GameObject> staticPlatformPool;
     private ObjectPool<GameObject> movingPlatformPool;
     private ObjectPool<GameObject> trapPlatformPool;
 
+    /// <summary>
+    /// Префаб обычной платформы.
+    /// </summary>
     public GameObject StaticPlatformPrefab;
+
+    /// <summary>
+    /// Префаб движущейся платформы.
+    /// </summary>
     public GameObject MovingPlatformPrefab;
+
+    /// <summary>
+    /// Префаб платформы-ловушки.
+    /// </summary>
     public GameObject TrapPlatformPrefab;
 
     void Awake()
@@ -20,6 +33,11 @@ public class PlatfromPool : MonoBehaviour
         trapPlatformPool = CreateObjectPool(TrapPlatformPrefab);
     }
 
+    /// <summary>
+    /// Создает новую платформу.
+    /// </summary>
+    /// <param name="position">Позиция платформы.</param>
+    /// <param name="type">Тип платформы.</param>
     public BasePlatform Create(Vector3 position, PlatfromType type)
     {
         var pool = GetObjectPool(type);
@@ -29,6 +47,10 @@ public class PlatfromPool : MonoBehaviour
         return platform.GetComponent<BasePlatform>();
     }
 
+    /// <summary>
+    /// Удаляет платформу.
+    /// </summary>
+    /// <param name="platform">Платформа.</param>
     public void Remove(BasePlatform platform)
     {
         var platformType = platform.GetComponent<BasePlatform>().PlatfromType;
@@ -43,7 +65,7 @@ public class PlatfromPool : MonoBehaviour
             PlatfromType.Static => staticPlatformPool,
             PlatfromType.Moving => movingPlatformPool,
             PlatfromType.Trap => trapPlatformPool,
-            _ => throw new System.Exception("TODO")
+            _ => throw new ArgumentException($"Unable to create platform of type {type}")
         };
     }
 

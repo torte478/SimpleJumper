@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// TODO: удалить
+/// </summary>
 public class FollowObject : MonoBehaviour
 {
     public Transform target;

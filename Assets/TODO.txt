@@ -1,8 +1,0 @@
-tutorial
-assertions
-TODO's
-chore
-comments
-
-credits
-https://kenney.nl/assets/jumper-pack

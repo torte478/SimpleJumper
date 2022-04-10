@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Класс игрока.
+/// </summary>
 public class Player : MonoBehaviour
 {
     private Rigidbody2D body;
@@ -11,20 +12,48 @@ public class Player : MonoBehaviour
     private float yPrevious;
     private Vector2 viewSize;
 
+    /// <summary>
+    /// Сила прыжка.
+    /// </summary>
     public float JumpForceY;
+
+    /// <summary>
+    /// Максимальная скорость.
+    /// </summary>
     public float MaxSpeed = 3.0f;
-    public float Speed = 50.0f;
-    public AudioClip JumpSound;
-    public AudioClip GameOverSound;
-    public bool IsPlayerControl;
+
+    /// <summary>
+    /// Множитель скорости.
+    /// </summary>
+    public float SpeedFactor = 50.0f;
+
+    /// <summary>
+    /// Управляется ли игрок пользователем.
+    /// </summary>
+    public bool IsUserControl;
+
+    /// <summary>
+    /// Максимальная высота, достижимая игроком.
+    /// </summary>
     public float TopY;
-    
+
+    /// <summary>
+    /// Звук прыжка.
+    /// </summary>
+    public AudioClip JumpSound;
+
+    /// <summary>
+    /// Звук поражения.
+    /// </summary>
+    public AudioClip GameOverSound;
+
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
 
         var collider = GetComponent<BoxCollider2D>();
+
         raycastBounds = new Vector2(
             collider.bounds.extents.x,
             collider.bounds.extents.y + 0.1f);
@@ -35,18 +64,72 @@ public class Player : MonoBehaviour
             .FindGameObjectWithTag("GameController")
             .GetComponent<ScreenScaler>().ScaleFactor;
 
-        Speed *= scaleFactor.x;
+        SpeedFactor *= scaleFactor.x;
         MaxSpeed *= scaleFactor.x;
         JumpForceY *= scaleFactor.y;
         TopY *= scaleFactor.y;
-        transform.position = new Vector3(transform.position.x * scaleFactor.x, transform.position.y * scaleFactor.y);
-    }
-
-    void Update()
-    {
+        transform.position = new Vector3(
+            transform.position.x * scaleFactor.x,
+            transform.position.y * scaleFactor.y);
     }
 
     void FixedUpdate()
+    {
+        UpdateHorizontalMovement();
+        UpdateVerticalMovement();
+        CheckHorizontalWrap();
+    }
+
+    /// <summary>
+    /// Обрабатчик события завершения игры.
+    /// </summary>
+    public void GameOver()
+    {
+        audioSource.PlayOneShot(GameOverSound);
+    }
+
+    private void CheckHorizontalWrap()
+    {
+        if (transform.position.x < -viewSize.x)
+        {
+            transform.position = new Vector3(viewSize.x, transform.position.y);
+        }
+        else if (transform.position.x > viewSize.x)
+        {
+            transform.position = new Vector3(-viewSize.x, transform.position.y);
+        }
+    }
+
+    private void UpdateVerticalMovement()
+    {
+        var yCurrent = transform.position.y;
+
+        var leftEdge = new Vector3(transform.position.x - raycastBounds.x, yCurrent);
+        var rightEdge = new Vector3(transform.position.x + raycastBounds.x, yCurrent);
+
+        var hit = Physics2D.Raycast(leftEdge, Vector3.down, raycastBounds.y);
+        if (!hit)
+            hit = Physics2D.Raycast(rightEdge, Vector3.down, raycastBounds.y);
+
+        var canJump = hit && 
+                      yPrevious > yCurrent && 
+                      yCurrent < TopY && 
+                      hit.collider.gameObject.TryGetComponent<BasePlatform>(out var platform) && 
+                      platform.CheckPlayerCollision();
+
+        if (canJump)
+        {
+            body.velocity = new Vector2(body.velocity.x, 0);
+            body.AddForce(new Vector2(0, JumpForceY));
+
+            if (IsUserControl)
+                audioSource.PlayOneShot(JumpSound);
+        }
+
+        yPrevious = yCurrent;
+    }
+
+    private void UpdateHorizontalMovement()
     {
         var xMove = GetXMove();
 
@@ -56,7 +139,7 @@ public class Player : MonoBehaviour
 
             if (xSpeed < MaxSpeed)
             {
-                var force = Speed * xMove * Vector3.right;
+                var force = SpeedFactor * xMove * Vector3.right;
                 body.AddForce(force);
             }
 
@@ -75,50 +158,11 @@ public class Player : MonoBehaviour
             velocity.x *= 0.9f;
             body.velocity = velocity;
         }
-
-        var yCurrent = transform.position.y;
-
-        var left = new Vector3(transform.position.x - raycastBounds.x, yCurrent);
-        var right = new Vector3(transform.position.x + raycastBounds.x, yCurrent);
-
-        var hit = Physics2D.Raycast(left, Vector3.down, raycastBounds.y);
-        if (!hit)
-            hit = Physics2D.Raycast(right, Vector3.down, raycastBounds.y);
-
-        if (hit && yPrevious > yCurrent && yCurrent < TopY && hit.collider.gameObject.TryGetComponent<BasePlatform>(out var platform))
-        {
-            var canJump = platform.CheckCollision();
-            
-            if (canJump)
-            {
-                body.velocity = new Vector2(body.velocity.x, 0);
-                body.AddForce(new Vector2(0, JumpForceY));
-
-                if (IsPlayerControl)
-                    audioSource.PlayOneShot(JumpSound);
-            }
-        }
-
-        yPrevious = yCurrent;
-
-        if (transform.position.x < -viewSize.x)
-        {
-            transform.position = new Vector3(viewSize.x, transform.position.y);
-        }
-        else if (transform.position.x > viewSize.x)
-        {
-            transform.position = new Vector3(-viewSize.x, transform.position.y);
-        }
-    }
-
-    public void GameOver()
-    {
-        audioSource.PlayOneShot(GameOverSound);
     }
 
     private float GetXMove()
     {
-        if (!IsPlayerControl)
+        if (!IsUserControl)
             return 0.0f;
 
         if (Input.touchCount > 0)
