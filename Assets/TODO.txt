@@ -1,6 +1,9 @@
-doodle jump like camera
-background/foreground/gui layer sorting
-fix platform collision
+add sound
+add particles
+add adaptive resolution
+assertions
+TODO's
+comments
 
 credits
 https://kenney.nl/assets/jumper-pack
