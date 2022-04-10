@@ -1,5 +1,6 @@
 doodle jump like camera
 background/foreground/gui layer sorting
+fix platform collision
 
 credits
 https://kenney.nl/assets/jumper-pack
