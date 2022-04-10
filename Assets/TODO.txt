@@ -1,2 +1,5 @@
+doodle jump like camera
+background/foreground/gui layer sorting
+
 credits
 https://kenney.nl/assets/jumper-pack
